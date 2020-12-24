@@ -15,6 +15,10 @@
         android:name="io.flutter.app.FlutterApplication"
         android:label="routes_app"
         android:icon="@mipmap/ic_launcher">
+
+        <meta-data android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyBTup2xDrZpgbusqyqvu9q28m4hfGRbJSM"/>
+
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
