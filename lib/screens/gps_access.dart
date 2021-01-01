@@ -10,6 +10,8 @@ class GPSAccessScreen extends StatefulWidget {
 
 class _GPSAccessScreenState extends State<GPSAccessScreen> with WidgetsBindingObserver {
   
+  bool popup = false; // For unstable context warning on iOS
+
   @override
   void initState() {
 
@@ -26,7 +28,7 @@ class _GPSAccessScreenState extends State<GPSAccessScreen> with WidgetsBindingOb
   @override
   Future<void> didChangeAppLifecycleState(AppLifecycleState state) async {
     // Escuchar cambios en el ciclo de vida de la app
-    if(state == AppLifecycleState.resumed) {
+    if(state == AppLifecycleState.resumed && !popup) {
       if(await Permission.location.isGranted) {
         Navigator.pushReplacementNamed(context, 'loading');
       }
@@ -48,8 +50,10 @@ class _GPSAccessScreenState extends State<GPSAccessScreen> with WidgetsBindingOb
               splashColor: Colors.transparent,
               elevation: 0,
               onPressed: () async {
+                popup = true;
                 final status = await Permission.location.request();
-                this.gpsAccess(status);
+                await this.gpsAccess(status);
+                popup = false;
               }
             )
           ],
@@ -58,11 +62,11 @@ class _GPSAccessScreenState extends State<GPSAccessScreen> with WidgetsBindingOb
     );
   }
 
-  void gpsAccess(PermissionStatus status) {
+  Future<void> gpsAccess(PermissionStatus status) async {
 
     switch (status) {
       case PermissionStatus.granted:
-        Navigator.pushReplacementNamed(context, 'maps');
+        await Navigator.pushReplacementNamed(context, 'loading');
         break;
 
       case PermissionStatus.undetermined:

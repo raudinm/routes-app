@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:routes_app/bloc/location/my_location_bloc.dart';
+import 'package:routes_app/bloc/map/map_bloc.dart';
 
 
 class MapScreen extends StatefulWidget {
@@ -36,6 +38,20 @@ class _MapScreenState extends State<MapScreen> {
   Widget showMap(MyLocationState state) {
     if(!state.locationExist) return Center(child: Text("Locating..."));
 
-    return Text("${state.location.latitude}, ${state.location.longitude}");
+    final mapBloc = BlocProvider.of<MapBloc>(context);
+
+    final cameraPosition = new CameraPosition(
+      target: state.location,
+      zoom:  15,
+    );
+
+    return GoogleMap(
+      initialCameraPosition: cameraPosition,
+      compassEnabled: true,
+      myLocationEnabled: true,
+      myLocationButtonEnabled: false,
+      zoomControlsEnabled: false,
+      onMapCreated: mapBloc.initMap,
+    );
   }
 }
