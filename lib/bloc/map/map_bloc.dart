@@ -53,6 +53,9 @@ class MapBloc extends Bloc<MapEvent, MapState> {
 
     } else if(event is OnTraceCamera) {
       yield* _onTraceCameraChange(event);
+
+    } else if(event is OnMovedMap) {
+      yield state.copyWith(centralLocation: event.centerMap);
     }
   }
 

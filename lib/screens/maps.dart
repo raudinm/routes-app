@@ -15,6 +15,8 @@ class MapScreen extends StatefulWidget {
 
 class _MapScreenState extends State<MapScreen> {
 
+  LatLng centerMap;
+
   @override
   void initState() {
     // iniciar seguimiento de la ubicacion del dispositivo
@@ -68,6 +70,12 @@ class _MapScreenState extends State<MapScreen> {
       zoomControlsEnabled: false,
       onMapCreated: mapBloc.initMap,
       polylines: mapBloc.state.polylines?.values?.toSet(),
+      onCameraMove: (CameraPosition cameraPosition) {
+        this.centerMap = cameraPosition.target;
+      },
+      onCameraIdle: () {
+        mapBloc.add(OnMovedMap(centerMap));
+      },
     );
   }
 }
